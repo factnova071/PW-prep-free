@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PWNSAT Class 7 Prep Hub</title>
+<style>
+:root{--bg:#f5f7fb;--card:#fff;--text:#182033;--muted:#667085;--primary:#635bff;--border:#e6e8ef;--good:#16a34a}
+*{box-sizing:border-box} body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--text)}
+header{background:linear-gradient(135deg,#171a35,#635bff);color:white;padding:28px 6%;position:sticky;top:0;z-index:5}
+header h1{margin:0;font-size:30px} header p{margin:7px 0 0;opacity:.86}
+nav{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px} nav button{border:1px solid #ffffff35;background:#ffffff16;color:white;padding:10px 15px;border-radius:10px;cursor:pointer}
+nav button.active,nav button:hover{background:white;color:#332bbd}
+main{max-width:1150px;margin:28px auto;padding:0 18px}.view{display:none}.view.active{display:block}
+.hero,.card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;box-shadow:0 8px 25px #1018280a}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:18px}
+.stat{font-size:30px;font-weight:800}.muted{color:var(--muted)}
+.progress{height:10px;background:#eceef5;border-radius:99px;overflow:hidden}.progress i{display:block;height:100%;background:var(--primary);border-radius:99px}
+.subject{cursor:pointer;transition:.2s}.subject:hover{transform:translateY(-3px);box-shadow:0 12px 30px #10182812}
+.subject h3{margin:8px 0}.tag{display:inline-block;background:#eeedff;color:#493fff;padding:5px 9px;border-radius:999px;font-size:12px}
+button.primary{background:var(--primary);color:#fff;border:0;padding:12px 17px;border-radius:11px;cursor:pointer;font-weight:700}
+button.secondary{background:#fff;border:1px solid var(--border);padding:11px 15px;border-radius:11px;cursor:pointer}
+.topic-list{display:grid;gap:10px;margin-top:15px}.topic{padding:14px;border:1px solid var(--border);border-radius:12px;background:#fff;display:flex;justify-content:space-between;gap:10px}
+.quizbox{max-width:760px;margin:auto}.option{display:block;width:100%;text-align:left;margin:9px 0;padding:13px;border:1px solid var(--border);background:#fff;border-radius:10px;cursor:pointer}.option:hover{border-color:var(--primary)}
+.option.correct{background:#ecfdf3;border-color:#86efac}.option.wrong{background:#fff1f2;border-color:#fda4af}
+#timer{font-size:22px;font-weight:800;color:var(--primary)} input{padding:12px;border:1px solid var(--border);border-radius:10px;width:100%;margin:7px 0}
+footer{text-align:center;color:var(--muted);padding:35px}
+.small{font-size:13px}.danger{color:#b42318}
+</style>
+</head>
+<body>
+<header>
+  <h1>🎓 PWNSAT Class 7 Prep Hub</h1>
+  <p>Study smart • Practice • Revise • Test yourself</p>
+  <nav>
+    <button class="active" onclick="show('home',this)">Dashboard</button>
+    <button onclick="show('syllabus',this)">Syllabus</button>
+    <button onclick="show('practice',this)">Practice</button>
+    <button onclick="show('mock',this)">60-min Mock</button>
+    <button onclick="show('progress',this)">Progress</button>
+  </nav>
+</header>
+
+<main>
+<section id="home" class="view active">
+  <div class="hero">
+    <span class="tag">CLASS 7</span>
+    <h2>Prepare for PWNSAT without panic.</h2>
+    <p class="muted">Your personal revision dashboard based on the syllabus you shared.</p>
+    <button class="primary" onclick="show('mock')">Start Mock Test →</button>
+  </div>
+  <div class="grid">
+    <div class="card"><div class="stat">40</div><div class="muted">Mock questions</div></div>
+    <div class="card"><div class="stat">60 min</div><div class="muted">Test timer</div></div>
+    <div class="card"><div class="stat">5</div><div class="muted">Subject areas</div></div>
+    <div class="card"><div class="stat" id="scoreHome">0%</div><div class="muted">Practice accuracy</div></div>
+  </div>
+  <div class="card" style="margin-top:18px">
+    <h3>📌 How to use this site</h3>
+    <ol>
+      <li>Read the syllabus and choose a weak topic.</li>
+      <li>Practice the mini questions.</li>
+      <li>Take the timed mock without outside help.</li>
+      <li>Review mistakes and repeat.</li>
+    </ol>
+  </div>
+</section>
+
+<section id="syllabus" class="view">
+  <h2>📚 Class 7 Syllabus</h2>
+  <p class="muted">Topics are organized from the syllabus image you shared.</p>
+  <div class="grid" id="subjects"></div>
+</section>
+
+<section id="practice" class="view">
+  <div class="card">
+    <h2>⚡ Quick Practice</h2>
+    <p class="muted">Answer the question, then reveal the explanation.</p>
+    <div id="practiceQ"></div>
+    <button class="primary" onclick="nextPractice()">Next Question</button>
+  </div>
+</section>
+
+<section id="mock" class="view">
+  <div class="quizbox">
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <h2>🧠 40-Question Mock</h2><span id="timer">60:00</span>
+      </div>
+      <p class="muted">Practice exam. The real exam rules may differ, so follow PW's instructions on exam day.</p>
+      <div id="quiz"></div>
+      <button class="primary" onclick="submitQuiz()">Submit Test</button>
+      <div id="result" style="margin-top:15px"></div>
+    </div>
+  </div>
+</section>
+
+<section id="progress" class="view">
+  <h2>📊 Progress</h2>
+  <div class="card">
+    <p><b>Overall practice accuracy</b></p>
+    <div class="progress"><i id="bar" style="width:0%"></i></div>
+    <h2 id="progressText">0%</h2>
+    <p class="muted">Your score is stored only in this browser.</p>
+    <button class="secondary" onclick="localStorage.clear();location.reload()">Reset progress</button>
+  </div>
+</section>
+</main>
+<footer>Made for practice. No leaked or live exam questions are included.</footer>
+
+<script>
+const syllabus={
+"⚡ Physics":["Electricity: Circuits and Their Components","Heat Transfer in Nature"],
+"🧪 Chemistry":["The Ever-Evolving World of Science","Acidic, Basic and Neutral Substances"],
+"🧬 Biology":["Adolescence: A Stage of Growth and Change"],
+"🔢 Mathematics":["Large Numbers Around Us","Arithmetic Expressions","A Peek Beyond the Point","Expressions Using Letter Numbers","Parallel and Intersecting Lines","Number Play"],
+"🧠 Mental Ability":["Series","Direction Test","Mathematical Operations","Missing Character","Puzzles","Mirror and Water Image"]
+};
+const qs=[
+["Which component opens and closes an electric circuit?","Switch",["Cell","Switch","Bulb","Wire"]],
+["Heat transfer through direct contact is called?","Conduction",["Radiation","Convection","Conduction","Reflection"]],
+["Heat from the Sun reaches Earth mainly by?","Radiation",["Conduction","Convection","Radiation","Evaporation"]],
+["Lemon juice is generally?","Acidic",["Acidic","Basic","Neutral","Metallic"]],
+["A neutral substance has a pH of approximately?","7",["1","5","7","14"]],
+["Adolescence is the period between?","Childhood and adulthood",["Infancy and childhood","Childhood and adulthood","Adulthood and old age","Birth and infancy"]],
+["What is 25 + 15 × 2?","55",["80","55","70","50"]],
+["If x = 5, what is 2x + 3?","13",["8","10","13","15"]],
+["Lines that never meet are called?","Parallel lines",["Intersecting lines","Parallel lines","Curved lines","Perpendicular lines"]],
+["What is the smallest 3-digit number?","100",["10","99","100","101"]],
+["Next: 2, 4, 8, 16, __","32",["20","24","32","36"]],
+["Next: 1, 4, 9, 16, 25, __","36",["30","32","36","49"]],
+["A water image is formed by reflection across a?","Horizontal line",["Vertical line","Horizontal line","Diagonal line","Curved line"]],
+["If a number × 3 + 5 = 26, the number is?","7",["5","6","7","8"]],
+["Which is a good conductor of electricity?","Copper",["Rubber","Plastic","Copper","Wood"]],
+["Which state has fixed volume but no fixed shape?","Liquid",["Solid","Liquid","Gas","None"]],
+["Which is a physical change?","Melting ice",["Burning paper","Rusting iron","Melting ice","Burning wood"]],
+["Which is generally basic?","Soap solution",["Lemon juice","Vinegar","Soap solution","Orange juice"]],
+["A number divisible by both 2 and 5 could be?","40",["23","35","40","47"]],
+["If C is taller than A and A taller than B, who is tallest?","C",["A","B","C","Cannot determine"]]
+];
+
+function show(id,btn){
+ document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));
+ document.getElementById(id).classList.add('active');
+ document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));
+ if(btn)btn.classList.add('active');
+ if(id==='mock') startQuiz();
+}
+document.getElementById('subjects').innerHTML=Object.entries(syllabus).map(([s,topics])=>`
+<div class="card subject"><span class="tag">${s.split(' ')[0]}</span><h3>${s.substring(2)}</h3>
+<div class="topic-list">${topics.map(t=>`<div class="topic"><span>${t}</span><span>→</span></div>`).join('')}</div></div>`).join('');
+
+let pi=0;
+function renderPractice(){
+ const q=qs[pi%qs.length];
+ document.getElementById('practiceQ').innerHTML=`<h3>${pi+1}. ${q[0]}</h3>${q[2].map(o=>`<button class="option" onclick="checkPractice(this,'${o.replace(/'/g,"\\'")}','${q[1].replace(/'/g,"\\'")}')">${o}</button>`).join('')}<p id="explain"></p>`;
+}
+function checkPractice(el,ans,correct){
+ document.querySelectorAll('#practiceQ .option').forEach(b=>b.disabled=true);
+ if(ans===correct){el.classList.add('correct');document.getElementById('explain').innerHTML='✅ Correct! Keep going.'}
+ else{el.classList.add('wrong');document.getElementById('explain').innerHTML='❌ Correct answer: <b>'+correct+'</b>'}
+}
+function nextPractice(){pi++;renderPractice()} renderPractice();
+
+let timer,remaining=3600,quizStarted=false;
+function startQuiz(){
+ if(quizStarted)return; quizStarted=true;
+ const shuffled=[...qs,...qs].slice(0,40);
+ document.getElementById('quiz').innerHTML=shuffled.map((q,i)=>`<div class="card" style="margin:12px 0"><b>${i+1}. ${q[0]}</b>${q[2].map(o=>`<label class="option"><input type="radio" name="q${i}" value="${o}" style="width:auto"> ${o}</label>`).join('')}</div>`).join('');
+ timer=setInterval(()=>{remaining--;let m=Math.floor(remaining/60),s=remaining%60;document.getElementById('timer').textContent=`${m}:${String(s).padStart(2,'0')}`;if(remaining<=0){clearInterval(timer);submitQuiz()}},1000);
+}
+function submitQuiz(){
+ clearInterval(timer);
+ const cards=document.querySelectorAll('#quiz .card'); let score=0,total=cards.length;
+ cards.forEach((c,i)=>{const selected=c.querySelector('input:checked');const q=qs[i%qs.length];if(selected&&selected.value===q[1])score++});
+ const pct=Math.round(score/total*100);localStorage.setItem('score',pct);
+ document.getElementById('result').innerHTML=`<div class="card"><h3>🏁 Score: ${score}/${total} (${pct}%)</h3><p>Review the topics you missed, then try again.</p></div>`;
+ document.getElementById('scoreHome').textContent=pct+'%';document.getElementById('bar').style.width=pct+'%';document.getElementById('progressText').textContent=pct+'%';
+}
+const old=localStorage.getItem('score');if(old){document.getElementById('scoreHome').textContent=old+'%';document.getElementById('bar').style.width=old+'%';document.getElementById('progressText').textContent=old+'%'}
+</script>
+</body>
+</html>
